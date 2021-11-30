@@ -5,9 +5,6 @@
 /*********************************/
 DROP DATABASE E_LEARNING_TEACHING;  
 
-ALTER TABLE danh_sach_hoc_sinh_trong_lop DROP CONSTRAINT fk_danh_sach_id_sv;
-
-
 /*********************************/
 /*                               */
 /*         CREATE DB             */
@@ -23,170 +20,191 @@ go
 /*            TABLE              */
 /*                               */
 /*********************************/
-CREATE TABLE Giang_Vien (
+/* 1 */
+CREATE TABLE lecturer (
     ID VARCHAR(10) NOT NULL PRIMARY KEY,
-    Ho_ten NVARCHAR(100) NOT NULL,
+    full_name NVARCHAR(100) NOT NULL,
     Email NVARCHAR(100) NOT NULL,
-    SDT VARCHAR(10),
-    ID_Khoa VARCHAR(10) NOT NULL,
+    p_number VARCHAR(10),
+    falcuty_ID VARCHAR(10) NOT NULL,
 );
+
 ---------------------------------------------------------------------------------------
-CREATE TABLE nhom_lop (
+/* 2 */
+CREATE TABLE class (
     ID VARCHAR(10) NOT NULL PRIMARY KEY,
-	ten VARCHAR(10) NOT NULL,
-    tiet_bat_dau VARCHAR(5) NOT NULL,
-	tiet_ket_thuc VARCHAR(5) NOT NULL,
-    Phong_hoc VARCHAR(50) NOT NULL,
-	id_giang_vien VARCHAR(10) NOT NULL,
-    id_monhoc VARCHAR(10) NOT NULL,
+	name VARCHAR(10) NOT NULL,
+    start_at VARCHAR(5) NOT NULL,
+	end_at VARCHAR(5) NOT NULL,
+    room VARCHAR(50) NOT NULL,
+	lecturer_ID VARCHAR(10) NOT NULL,
+    subject_ID VARCHAR(10) NOT NULL,
 );
 ----------------------------------------------------------------------
-CREATE TABLE Sinh_Vien (
+/* 3 */
+CREATE TABLE pupil (
     ID VARCHAR(10) NOT NULL PRIMARY KEY,
-    Ho_ten NVARCHAR(100) NOT NULL,
-    Lop VARCHAR(100) NOT NULL,
+    full_name NVARCHAR(100) NOT NULL,
+    class VARCHAR(100) NOT NULL,
     Email NVARCHAR(200) NOT NULL,
-    TT_hoc NVARCHAR(100) NOT NULL,
-    khoa_ID VARCHAR(10) NOT NULL,
+    status NVARCHAR(100) NOT NULL,
+    falcuty_ID VARCHAR(10) NOT NULL,
 );
 ----------------------------------------------------------------------
-CREATE TABLE phong_hoc (
+/* 4 */
+CREATE TABLE room (
     name VARCHAR(50) NOT NULL PRIMARY KEY,
-	toa NVARCHAR(100) NOT NULL,
-	co_so NVARCHAR(100) NOT NULL,
+	building NVARCHAR(100) NOT NULL,
 );
-SELECT * FROM phong_hoc;
 ----------------------------------------------------------------------
-CREATE TABLE khoa (
+/* 5 */
+CREATE TABLE falcuty (
     ID VARCHAR(10) NOT NULL,
     name NVARCHAR(50) NOT NULL,
     PRIMARY KEY (ID)
 );
 
 -----------------------------------------------------------------------------------
-CREATE TABLE mon_hoc (
+/* 6 */
+CREATE TABLE subject (
     ID VARCHAR(10) NOT NULL PRIMARY KEY,
-    Ten_MH NVARCHAR(100) NOT NULL,
-    So_TC SMALLINT NOT NULL
+    name NVARCHAR(100) NOT NULL,
+    num_credit SMALLINT NOT NULL
 );
 
 -----------------------------------------------------------------------------------
-CREATE TABLE Giao_Trinh (
+/* 7 */
+CREATE TABLE text_book (
     ID VARCHAR(10) NOT NULL,
-    Ten_GT VARCHAR(50) NOT NULL,
-    Nam_xuatban VARCHAR(4) NOT NULL,
+    name VARCHAR(50) NOT NULL,
+    publishing_year VARCHAR(4) NOT NULL,
     PRIMARY KEY (ID)
 );
-CREATE TABLE Tac_Gia (
+/* 8 */
+CREATE TABLE author (
     ID VARCHAR(10) NOT NULL,
-    Ho_Ten VARCHAR(50) NOT NULL,
+    full_name VARCHAR(50) NOT NULL,
     PRIMARY KEY (ID)
 );
+
 ----------------------------------------------------------------------------
-CREATE TABLE danh_sach_hoc_sinh_trong_lop (
-    ID_SV VARCHAR(10) NOT NULL,
-	ID_nhom_lop VARCHAR(10) NOT NULL ,
+/* 9 */
+CREATE TABLE studentList (
+    pupil_ID VARCHAR(10) NOT NULL,
+	group_ID VARCHAR(10) NOT NULL ,
 );
-CREATE TABLE giang_vien_quan_li_lop (
-    ID_GV VARCHAR(10) NOT NULL,
-	ID_nhom_lop VARCHAR(10) NOT NULL ,
+/* 10 */
+CREATE TABLE lecturerList (
+    lecturer_ID VARCHAR(10) NOT NULL,
+	class_ID VARCHAR(10) NOT NULL ,
 );
 
 ------------------------------------------------------------------------
-
-CREATE TABLE CT_Dao_Tao (
-    Khoa_ID VARCHAR(10) NOT NULL,
-    ID_Monhoc VARCHAR(10) NOT NULL,
-    PRIMARY KEY (Khoa_ID, ID_Monhoc)
+/* 11 */
+CREATE TABLE education (
+    falcuty_ID VARCHAR(10) NOT NULL,
+    subject_ID VARCHAR(10) NOT NULL,
+    PRIMARY KEY (falcuty_ID, subject_ID)
 );
 ---------------------------------------------------------------------------
-
-CREATE TABLE Quanly_Mon_Hoc (
-    ID_GV VARCHAR(10) NOT NULL,
-    ID_Monhoc VARCHAR(6) NOT NULL,
-    ID_GT VARCHAR(10) NOT NULL,
-    PRIMARY KEY (ID_GV, ID_Monhoc, ID_GT)
+/* 12 */
+CREATE TABLE subjectManage (
+    lecturer_ID VARCHAR(10) NOT NULL,
+    subject_ID VARCHAR(10) NOT NULL,
+    tex_book_ID VARCHAR(10) NOT NULL,
+    PRIMARY KEY (lecturer_ID, subject_ID, tex_book_ID)
 );
 
 ------------------------------------------------------------------------------
-
-CREATE TABLE Bien_Soan_GT (
-    ID_GT VARCHAR(10) NOT NULL,
-    ID_TG VARCHAR(10) NOT NULL,
-    PRIMARY KEY (ID_GT, ID_TG)
+/* 13 */
+CREATE TABLE compilation (
+    tex_book_ID VARCHAR(10) NOT NULL,
+    author_ID VARCHAR(10) NOT NULL,
+    PRIMARY KEY (tex_book_ID, author_ID)
 );
+------------------------------------------------------------------------------
+
 
 /*********************************/
 /*                               */
 /*         FOREIGN KEY           */
 /*                               */
 /*********************************/
-ALTER TABLE Giang_Vien ADD CONSTRAINT fk_Giang_Vien_id_khoa FOREIGN KEY (ID_Khoa) REFERENCES Khoa(ID);
+
+ALTER TABLE lecturer ADD CONSTRAINT fk_lecturer_falcutyID FOREIGN KEY (falcuty_ID) REFERENCES falcuty(ID);
 
 -----------------------------------------------------------------------------------------------------------
-ALTER TABLE nhom_lop ADD CONSTRAINT fk_nhom_lop_id_monhoc FOREIGN KEY (id_monhoc) REFERENCES mon_hoc(ID);
-ALTER TABLE nhom_lop ADD CONSTRAINT fk_nhom_lop_id_giang_vien FOREIGN KEY (id_giang_vien) REFERENCES Giang_Vien(ID);
-ALTER TABLE nhom_lop ADD CONSTRAINT fk_nhom_lop_phong_hoc FOREIGN KEY (Phong_hoc) REFERENCES phong_hoc(name);
+ALTER TABLE class ADD CONSTRAINT fk_class_subjectID FOREIGN KEY (subject_ID) REFERENCES subject(ID);
+ALTER TABLE class ADD CONSTRAINT fk_class_lectureID FOREIGN KEY (lecturer_ID) REFERENCES lecturer(ID);
+ALTER TABLE class ADD CONSTRAINT fk_class_room FOREIGN KEY (room) REFERENCES room(name);
 
 ------------------------------------------------------------------------------------------------------------
-ALTER TABLE Sinh_Vien ADD CONSTRAINT fk_Sinh_Vien_khoa_ID FOREIGN KEY (Khoa_ID) REFERENCES Khoa(ID);
+ALTER TABLE pupil ADD CONSTRAINT fk_pupil_falcutyID FOREIGN KEY (falcuty_ID) REFERENCES falcuty(ID);
 
 --------------------------------------------------------------------
-ALTER TABLE danh_sach_hoc_sinh_trong_lop ADD CONSTRAINT fk_danh_sach_id_sv FOREIGN KEY (ID_SV) REFERENCES Sinh_vien(ID);
-ALTER TABLE danh_sach_hoc_sinh_trong_lop ADD CONSTRAINT fk_danh_sach_id_lop FOREIGN KEY (ID_nhom_lop) REFERENCES nhom_lop(ID);
+ALTER TABLE studentList ADD CONSTRAINT fk_studentList_pupilID FOREIGN KEY (pupil_ID) REFERENCES pupil(ID);
+ALTER TABLE studentList ADD CONSTRAINT fk_studentList_classID FOREIGN KEY (group_ID) REFERENCES class(ID);
 
 --------------------------------------------------------------------
-ALTER TABLE giang_vien_quan_li_lop ADD CONSTRAINT fk_quan_li_id_gv FOREIGN KEY (ID_GV) REFERENCES Giang_vien(ID);
-ALTER TABLE giang_vien_quan_li_lop ADD CONSTRAINT fk_quan_li_id_lop FOREIGN KEY (ID_nhom_lop) REFERENCES nhom_lop(ID);
+ALTER TABLE lecturerList ADD CONSTRAINT fk_lecturerList_lectureID FOREIGN KEY (lecturer_ID) REFERENCES lecturer(ID);
+ALTER TABLE lecturerList ADD CONSTRAINT fk_lecturerList_classID FOREIGN KEY (class_ID) REFERENCES class(ID);
 
 --------------------------------------------------------------------
-ALTER TABLE CT_Dao_Tao ADD CONSTRAINT fk_CT_Dao_Tao_Khoa_ID FOREIGN KEY (Khoa_ID) REFERENCES Khoa(ID);
-ALTER TABLE CT_Dao_Tao ADD CONSTRAINT fk_CT_Dao_Tao_ID_Monhoc FOREIGN KEY (ID_Monhoc) REFERENCES mon_hoc(ID);
+ALTER TABLE education ADD CONSTRAINT fk_education_falcutyID FOREIGN KEY (falcuty_ID) REFERENCES falcuty(ID);
+ALTER TABLE education ADD CONSTRAINT fk_education_subjectID FOREIGN KEY (subject_ID) REFERENCES subject(ID);
 
 --------------------------------------------------------------------
-ALTER TABLE Quanly_Mon_Hoc ADD CONSTRAINT fk_Quanly_ID_GV FOREIGN KEY (ID_GV) REFERENCES Giang_vien(ID);
-ALTER TABLE Quanly_Mon_Hoc ADD CONSTRAINT fk_Quanly_ID_Monhoc FOREIGN KEY (ID_Monhoc) REFERENCES mon_hoc(ID);
-ALTER TABLE Quanly_Mon_Hoc ADD CONSTRAINT fk_Quanly_ID_GT FOREIGN KEY (ID_GT) REFERENCES Giao_Trinh(ID);
+ALTER TABLE subjectManage ADD CONSTRAINT fk_subjectManage_lectureID FOREIGN KEY (lecturer_ID) REFERENCES lecturer(ID);
+ALTER TABLE subjectManage ADD CONSTRAINT fk_subjectManage_subjectID FOREIGN KEY (subject_ID) REFERENCES subject(ID);
+ALTER TABLE subjectManage ADD CONSTRAINT fk_subjectManage_texbookID FOREIGN KEY (tex_book_ID) REFERENCES text_book(ID);
 
 ---------------------------------------------------------------------
-ALTER TABLE Bien_Soan_GT ADD CONSTRAINT fk_Bien_Soan_ID_GT FOREIGN KEY (ID_GT) REFERENCES Giao_Trinh(ID);
-ALTER TABLE Bien_Soan_GT ADD CONSTRAINT fk_Bien_Soan_ID_TG FOREIGN KEY (ID_TG) REFERENCES Tac_Gia(ID);
+ALTER TABLE compilation ADD CONSTRAINT fk_compilation_texbookID FOREIGN KEY (tex_book_ID) REFERENCES text_book(ID);
+ALTER TABLE compilation ADD CONSTRAINT fk_compilation_authorID FOREIGN KEY (author_ID) REFERENCES author(ID);
 /*********************************/
 /*                               */
 /*         DATA                  */
 /*                               */
 /*********************************/
-INSERT INTO danh_sach_hoc_sinh_trong_lop
-VALUES 
-('1913779', '1101' )
---------------------------------------------------------
-INSERT INTO phong_hoc 
-VALUES 
-('202H3', N'H3', N'Co so 1');
-
 ----------------------------------------------------------
-INSERT INTO khoa 
+INSERT INTO falcuty 
 values
-('100174',N'Khoa Học Máy Tinh'),('100175',N'Kĩ Thuật Máy Tính')
+('1001',N' Học Máy Tinh'),('1002',N'Kĩ Thuật Máy Tính')
 
 ----------------------------------------------------------
-INSERT INTO mon_hoc 
+INSERT INTO pupil
+VALUES 
+('1913779', N'Nguyễn Hữu Khải','L07','khai.nguyenhuu@hcmut.edu.vn','normal','1001' )
+
+----------------------------------------------------------
+INSERT INTO lecturer
+VALUES 
+('5012345', N'Nguyễn Hữu Luân','luan.nguyenhuu@hcmut.edu.vn','0846141788','1001' )
+
+--------------------------------------------------------
+INSERT INTO subject 
 values
 ('CO2004',N'Hệ Cơ sở DL','3'),('SP1008',N'Pháp Luat VN đại cương','4')
-
 ----------------------------------------------------------
-INSERT INTO nhom_lop 
-values
-('1101','L05','3','6','202H3','10840','CO2004')
-----------------------------------------------------------
-INSERT INTO giang_vien_quan_li_lop 
-values
-('10840','1101')
-
-----------------------------------------------------------
-INSERT INTO phong_hoc 
+INSERT INTO room 
 VALUES 
-('202H3','H3',N'Co so 1');
+('202H3', N'H3');
+
+--------------------------------------------------------
+INSERT INTO class
+VALUES 
+('1001', 'L05' ,'4','6','202H3','5012345','CO2004')
+--------------------------------------------------------
+INSERT INTO studentList
+VALUES 
+('1913779', '1001' )
+--------------------------------------------------------
+
+INSERT INTO lecturerList 
+values
+('5012345','1001')
+
+----------------------------------------------------------
 
 /*********************************/
 /*                               */
@@ -194,38 +212,40 @@ VALUES
 /*                               */
 /*********************************/
 -----------GOI danh sach GV-------------------
-SELECT Giang_Vien.Ho_ten,Giang_Vien.ID,Giang_Vien.Email,Giang_Vien.SDT ,khoa.name
-FROM Giang_Vien INNER JOIN khoa 
-ON Giang_Vien.ID_Khoa = khoa.ID
-WHERE Giang_Vien.ID = 10840;
+SELECT lecturer.full_name,lecturer.ID,lecturer.Email,lecturer.p_number ,falcuty.name
+FROM lecturer INNER JOIN falcuty 
+ON lecturer.falcuty_ID = falcuty.ID
+
 
 -----------GOI danh sach SV-------------------
-SELECT Sinh_Vien.Ho_ten as full_name, Sinh_Vien.ID as MSSV,Sinh_Vien.Email , Sinh_Vien.Lop,Sinh_Vien.TT_hoc as tinh_trang_hoc,khoa.name as khoa
-FROM Sinh_Vien INNER JOIN khoa 
-ON Sinh_Vien.khoa_ID = khoa.ID;
+SELECT pupil.full_name as full_name, pupil.ID as MSSV,pupil.Email , pupil.class,pupil.status as tinh_trang_hoc,falcuty.name as falcuty
+FROM pupil INNER JOIN falcuty 
+ON pupil.falcuty_ID = falcuty.ID;
 
------------GOI danh sach nhom lop-------------------
-SELECT nhom_lop.ten as ten_nhom_lop,nhom_lop.tiet_bat_dau,nhom_lop.tiet_ket_thuc,nhom_lop.Phong_hoc,Giang_Vien.Ho_ten as giang_vien_phu_trach,mon_hoc.Ten_MH as mon_hoc
-FROM ((nhom_lop 
-INNER JOIN Giang_Vien ON nhom_lop.id_giang_vien = Giang_Vien.ID)
-INNER JOIN mon_hoc ON nhom_lop.id_monhoc = mon_hoc.ID);
+-----------GOI danh sach nhom class-------------------
+SELECT class.name as ten_nhom_lop,class.start_at,class.end_at,class.room,lecturer.full_name as giang_vien_phu_trach,subject.name as subject
+FROM ((class 
+INNER JOIN lecturer ON class.lecturer_ID = lecturer.ID)
+INNER JOIN subject ON class.subject_ID = subject.ID);
 
------------GOI danh sach hoc sinh trong lop-------------------
-SELECT nhom_lop.ten as nhom_lop,Sinh_Vien.Ho_ten as full_name,Sinh_Vien.ID as MSSV , Sinh_Vien.Email,Sinh_Vien.Lop,khoa.name as khoa
-FROM (((danh_sach_hoc_sinh_trong_lop 
-INNER JOIN nhom_lop
-ON danh_sach_hoc_sinh_trong_lop.ID_nhom_lop = nhom_lop.ID)
-INNER JOIN Sinh_Vien
-ON danh_sach_hoc_sinh_trong_lop.ID_SV = Sinh_Vien.ID)
-INNER JOIN khoa
-ON Sinh_Vien.khoa_ID = khoa.ID);
+-----------GOI danh sach hoc sinh trong class-------------------
+SELECT class.name as class,pupil.full_name as full_name,pupil.ID as MSSV , pupil.Email,pupil.class,falcuty.name as falcuty
+FROM (((studentList 
+INNER JOIN class
+ON studentList.group_ID = class.ID)
+INNER JOIN pupil
+ON studentList.pupil_ID = pupil.ID)
+INNER JOIN falcuty
+ON pupil.falcuty_ID = falcuty.ID);
 
------------GOI danh sach GV quan li lop-------------------
-SELECT nhom_lop.ten as lop, Giang_Vien.Ho_ten,Giang_Vien.ID,Giang_Vien.Email,Giang_Vien.SDT ,khoa.name as khoa
-FROM (((giang_vien_quan_li_lop 
-INNER JOIN nhom_lop 
-ON giang_vien_quan_li_lop.ID_nhom_lop = nhom_lop.ID)
-INNER JOIN Giang_Vien 
-ON giang_vien_quan_li_lop.ID_GV = Giang_Vien.ID)
-INNER JOIN khoa 
-ON Giang_Vien.ID_Khoa = khoa.ID);
+-----------GOI danh sach GV quan li class-------------------
+SELECT class.name as class, lecturer.full_name,lecturer.ID,lecturer.Email,lecturer.p_number ,falcuty.name as falcuty
+FROM (((lecturerList 
+INNER JOIN class 
+ON lecturerList.class_ID = class.ID)
+INNER JOIN lecturer 
+ON lecturerList.lecturer_ID = lecturer.ID)
+INNER JOIN falcuty 
+ON lecturer.falcuty_ID = falcuty.ID);
+
+
