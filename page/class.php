@@ -54,11 +54,11 @@
                               </tr>   
                               <tr>
                                    <td>Tiet bat dau</td>
-                                   <td><input type="text" name="tiet_bat_dau" value="<?php echo $row_class_update['tiet_bat_dau'] ?>"></td>
+                                   <td><input type="text" name="start" value="<?php echo $row_class_update['tiet_bat_dau'] ?>"></td>
                               </tr>  
                               <tr>
                                    <td>Tiet ket thuc</td>
-                                   <td><input type="text" name="tiet_ket_thuc" value="<?php echo $row_class_update['tiet_ket_thuc'] ?>"></td>
+                                   <td><input type="text" name="end" value="<?php echo $row_class_update['tiet_ket_thuc'] ?>"></td>
                               </tr>   
                               <tr>
                                    <td>Phong hoc</td>
@@ -79,7 +79,7 @@
                               </tr> 
                               <tr>
                                    <td>Id Mon hoc</td>
-                                   <td><select name="ID_Monhoc" >
+                                   <td><select name="id_monhoc" >
                                         <?php
                                              $query_MH=$subject->select();
                                              while($row_id_MH = $query_MH->fetch_assoc()){

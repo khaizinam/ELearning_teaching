@@ -88,7 +88,7 @@
                    $room=$_POST['Phong_hoc'];
                    $id_giang_vien=$_POST['id_giang_vien'];
                    $id_subject=$_POST['id_monhoc'];
-                   $query = "UPDATE nhom_lop SET ten=='".$ten."', tiet_bat_dau='".$start."', tiet_ket_thuc='".$end."', Phong_hoc='".$room."',id_giang_vien='".$id_giang_vien."', id_monhoc='".$id_subject."' WHERE ID='".$id_get."'";
+                   $query = "UPDATE nhom_lop SET ten='".$ten."', tiet_bat_dau='".$start."', tiet_ket_thuc='".$end."', Phong_hoc='".$room."',id_giang_vien='".$id_giang_vien."', id_monhoc='".$id_subject."' WHERE ID='".$id_get."'";
                    $this->db->select($query);
                }
            };
