@@ -28,7 +28,6 @@ CREATE TABLE lecturer (
     p_number VARCHAR(10),
     falcuty_ID VARCHAR(10) NOT NULL,
 );
-
 ---------------------------------------------------------------------------------------
 /* 2 */
 CREATE TABLE class (
@@ -71,7 +70,6 @@ CREATE TABLE subject (
     name NVARCHAR(100) NOT NULL,
     num_credit SMALLINT NOT NULL
 );
-
 -----------------------------------------------------------------------------------
 /* 7 */
 CREATE TABLE text_book (
@@ -86,7 +84,6 @@ CREATE TABLE author (
     full_name VARCHAR(50) NOT NULL,
     PRIMARY KEY (ID)
 );
-
 ----------------------------------------------------------------------------
 /* 9 */
 CREATE TABLE studentList (
@@ -249,3 +246,8 @@ INNER JOIN falcuty
 ON lecturer.falcuty_ID = falcuty.ID);
 
 
+/*********************************/
+/*                               */
+/*           TRIGGER             */
+/*                               */
+/*********************************/
