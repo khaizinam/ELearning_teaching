@@ -55,7 +55,7 @@ CREATE TABLE phong_hoc (
 	toa NVARCHAR(100) NOT NULL,
 	co_so NVARCHAR(100) NOT NULL,
 );
-
+SELECT * FROM phong_hoc;
 ----------------------------------------------------------------------
 CREATE TABLE khoa (
     ID VARCHAR(10) NOT NULL,
@@ -159,7 +159,6 @@ ALTER TABLE Bien_Soan_GT ADD CONSTRAINT fk_Bien_Soan_ID_TG FOREIGN KEY (ID_TG) R
 INSERT INTO danh_sach_hoc_sinh_trong_lop
 VALUES 
 ('1913779', '1101' )
-
 --------------------------------------------------------
 INSERT INTO phong_hoc 
 VALUES 
@@ -176,18 +175,24 @@ values
 ('CO2004',N'Hệ Cơ sở DL','3'),('SP1008',N'Pháp Luat VN đại cương','4')
 
 ----------------------------------------------------------
+INSERT INTO nhom_lop 
+values
+('1101','L05','3','6','202H3','10840','CO2004')
+----------------------------------------------------------
+INSERT INTO giang_vien_quan_li_lop 
+values
+('10840','1101')
+
+----------------------------------------------------------
 INSERT INTO phong_hoc 
 VALUES 
-('202H3',N'H3',N'Co so 1');
+('202H3','H3',N'Co so 1');
 
 /*********************************/
 /*                               */
 /*            QUERY              */
 /*                               */
 /*********************************/
-SELECT * FROM Sinh_Vien;
-SELECT * FROM nhom_lop;
-
 -----------GOI danh sach GV-------------------
 SELECT Giang_Vien.Ho_ten,Giang_Vien.ID,Giang_Vien.Email,Giang_Vien.SDT ,khoa.name
 FROM Giang_Vien INNER JOIN khoa 
@@ -214,3 +219,13 @@ INNER JOIN Sinh_Vien
 ON danh_sach_hoc_sinh_trong_lop.ID_SV = Sinh_Vien.ID)
 INNER JOIN khoa
 ON Sinh_Vien.khoa_ID = khoa.ID);
+
+-----------GOI danh sach GV quan li lop-------------------
+SELECT nhom_lop.ten as lop, Giang_Vien.Ho_ten,Giang_Vien.ID,Giang_Vien.Email,Giang_Vien.SDT ,khoa.name as khoa
+FROM (((giang_vien_quan_li_lop 
+INNER JOIN nhom_lop 
+ON giang_vien_quan_li_lop.ID_nhom_lop = nhom_lop.ID)
+INNER JOIN Giang_Vien 
+ON giang_vien_quan_li_lop.ID_GV = Giang_Vien.ID)
+INNER JOIN khoa 
+ON Giang_Vien.ID_Khoa = khoa.ID);
