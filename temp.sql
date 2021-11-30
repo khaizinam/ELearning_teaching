@@ -87,17 +87,16 @@ CREATE TABLE danh_sach_hoc_sinh_trong_lop (
     ID_SV VARCHAR(10) NOT NULL,
 	ID_nhom_lop VARCHAR(10) NOT NULL ,
 );
-ALTER TABLE danh_sach_hoc_sinh_trong_lop
-DROP CONSTRAINT fk_danh_sach_id_sv; 
 CREATE TABLE giang_vien_quan_li_lop (
     ID_GV VARCHAR(10) NOT NULL,
 	ID_nhom_lop VARCHAR(10) NOT NULL ,
 );
+
 ------------------------------------------------------------------------
 
 CREATE TABLE CT_Dao_Tao (
     Khoa_ID VARCHAR(10) NOT NULL,
-    ID_Monhoc VARCHAR(6) NOT NULL,
+    ID_Monhoc VARCHAR(10) NOT NULL,
     PRIMARY KEY (Khoa_ID, ID_Monhoc)
 );
 ---------------------------------------------------------------------------
@@ -108,6 +107,7 @@ CREATE TABLE Quanly_Mon_Hoc (
     ID_GT VARCHAR(10) NOT NULL,
     PRIMARY KEY (ID_GV, ID_Monhoc, ID_GT)
 );
+
 ------------------------------------------------------------------------------
 
 CREATE TABLE Bien_Soan_GT (
@@ -122,16 +122,35 @@ CREATE TABLE Bien_Soan_GT (
 /*                               */
 /*********************************/
 ALTER TABLE Giang_Vien ADD CONSTRAINT fk_Giang_Vien_id_khoa FOREIGN KEY (ID_Khoa) REFERENCES Khoa(ID);
+
 -----------------------------------------------------------------------------------------------------------
 ALTER TABLE nhom_lop ADD CONSTRAINT fk_nhom_lop_id_monhoc FOREIGN KEY (id_monhoc) REFERENCES mon_hoc(ID);
 ALTER TABLE nhom_lop ADD CONSTRAINT fk_nhom_lop_id_giang_vien FOREIGN KEY (id_giang_vien) REFERENCES Giang_Vien(ID);
 ALTER TABLE nhom_lop ADD CONSTRAINT fk_nhom_lop_phong_hoc FOREIGN KEY (Phong_hoc) REFERENCES phong_hoc(name);
+
 ------------------------------------------------------------------------------------------------------------
 ALTER TABLE Sinh_Vien ADD CONSTRAINT fk_Sinh_Vien_khoa_ID FOREIGN KEY (Khoa_ID) REFERENCES Khoa(ID);
+
 --------------------------------------------------------------------
 ALTER TABLE danh_sach_hoc_sinh_trong_lop ADD CONSTRAINT fk_danh_sach_id_sv FOREIGN KEY (ID_SV) REFERENCES Sinh_vien(ID);
 ALTER TABLE danh_sach_hoc_sinh_trong_lop ADD CONSTRAINT fk_danh_sach_id_lop FOREIGN KEY (ID_nhom_lop) REFERENCES nhom_lop(ID);
 
+--------------------------------------------------------------------
+ALTER TABLE giang_vien_quan_li_lop ADD CONSTRAINT fk_quan_li_id_gv FOREIGN KEY (ID_GV) REFERENCES Giang_vien(ID);
+ALTER TABLE giang_vien_quan_li_lop ADD CONSTRAINT fk_quan_li_id_lop FOREIGN KEY (ID_nhom_lop) REFERENCES nhom_lop(ID);
+
+--------------------------------------------------------------------
+ALTER TABLE CT_Dao_Tao ADD CONSTRAINT fk_CT_Dao_Tao_Khoa_ID FOREIGN KEY (Khoa_ID) REFERENCES Khoa(ID);
+ALTER TABLE CT_Dao_Tao ADD CONSTRAINT fk_CT_Dao_Tao_ID_Monhoc FOREIGN KEY (ID_Monhoc) REFERENCES mon_hoc(ID);
+
+--------------------------------------------------------------------
+ALTER TABLE Quanly_Mon_Hoc ADD CONSTRAINT fk_Quanly_ID_GV FOREIGN KEY (ID_GV) REFERENCES Giang_vien(ID);
+ALTER TABLE Quanly_Mon_Hoc ADD CONSTRAINT fk_Quanly_ID_Monhoc FOREIGN KEY (ID_Monhoc) REFERENCES mon_hoc(ID);
+ALTER TABLE Quanly_Mon_Hoc ADD CONSTRAINT fk_Quanly_ID_GT FOREIGN KEY (ID_GT) REFERENCES Giao_Trinh(ID);
+
+---------------------------------------------------------------------
+ALTER TABLE Bien_Soan_GT ADD CONSTRAINT fk_Bien_Soan_ID_GT FOREIGN KEY (ID_GT) REFERENCES Giao_Trinh(ID);
+ALTER TABLE Bien_Soan_GT ADD CONSTRAINT fk_Bien_Soan_ID_TG FOREIGN KEY (ID_TG) REFERENCES Tac_Gia(ID);
 /*********************************/
 /*                               */
 /*         DATA                  */
