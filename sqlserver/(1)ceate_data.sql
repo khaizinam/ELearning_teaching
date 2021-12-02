@@ -4,13 +4,11 @@
 /*         CREATE DB             */
 /*                               */
 /*********************************/
-
-
-CREATE DATABASE E_LEARNING_TEACHING_BETA_2;  
+CREATE DATABASE E_LEARNING_TEACHING_BETA;  
 go
 
 
-USE E_LEARNING_TEACHING_BETA_2; 
+USE E_LEARNING_TEACHING_BETA; 
 go
 
 
@@ -21,61 +19,79 @@ go
 /*                               */
 /*********************************/
 /* 1 */
-CREATE TABLE lecturer (
-    ID VARCHAR(10) NOT NULL PRIMARY KEY,
-    full_name NVARCHAR(100) NOT NULL,
-    Email NVARCHAR(100) NOT NULL,
-    p_number VARCHAR(10),
-    falcuty_ID VARCHAR(10) NOT NULL,
-);
----------------------------------------------------------------------------------------
-/* 2 */
-CREATE TABLE class (
-    ID VARCHAR(10) NOT NULL PRIMARY KEY,
-	name VARCHAR(10) NOT NULL,
-    start_at VARCHAR(5) NOT NULL,
-	end_at VARCHAR(5) NOT NULL,
-    room VARCHAR(50) NOT NULL,
-	lecturer_ID VARCHAR(10) NOT NULL,
-    subject_ID VARCHAR(10) NOT NULL,
-);
-----------------------------------------------------------------------
-/* 3 */
-CREATE TABLE pupil (
-    ID VARCHAR(10) NOT NULL PRIMARY KEY,
-    full_name NVARCHAR(100) NOT NULL,
-    class VARCHAR(100) NOT NULL,
-    Email NVARCHAR(200) NOT NULL,
-    status NVARCHAR(100) NOT NULL,
-    falcuty_ID VARCHAR(10) NOT NULL,
-);
-----------------------------------------------------------------------
-/* 4 */
-CREATE TABLE author (
-    ID VARCHAR(10) NOT NULL,
-    full_name VARCHAR(50) NOT NULL,
-    PRIMARY KEY (ID)
-);
-----------------------------------------------------------------------
-/* 5 */
-CREATE TABLE falcuty (
-    ID VARCHAR(10) NOT NULL,
+CREATE TABLE Department (
+    ID INT NOT NULL IDENTITY(1,1),
     name NVARCHAR(50) NOT NULL,
     PRIMARY KEY (ID)
 );
+---------------------------------------------------------------------------------------
+/* 2 */
+CREATE TABLE lecturer (
+    ID DECIMAL(7,0) NOT NULL ,
+    full_name NVARCHAR(100) NOT NULL,
+    DepartmentID INT NOT NULL,
+    PRIMARY KEY(ID),
+    FOREIGN KEY (DepartmentID) 
+        REFERENCES Department(ID)
+);
+
+----------------------------------------------------------------------
+
+/* 3 */
+CREATE TABLE pupil (
+    ID DECIMAL(7,0) NOT NULL ,
+    full_name NVARCHAR(100) NOT NULL,
+    status VARCHAR(50) NOT NULL,
+    DepartmentID INT NOT NULL,
+    PRIMARY KEY(ID),
+    FOREIGN KEY (DepartmentID) 
+        REFERENCES Department(ID)
+);
+
+----------------------------------------------------------------------
+/* 4 */
+CREATE TABLE subject (
+    ID VARCHAR(10) NOT NULL,
+    name NVARCHAR(255) NOT NULL,
+    credits INT NOT NULL CHECK (Credits > 0 AND Credits < 6),
+    DepartmentID INT NOT NULL,
+	PRIMARY KEY(ID),
+    FOREIGN KEY (DepartmentID) 
+        REFERENCES Department(ID)
+);
+
+----------------------------------------------------------------------
+/* 5 */
+CREATE TABLE class (
+    ID VARCHAR(10) NOT NULL,
+    semester INT NOT NULL,
+	name VARCHAR(10) NOT NULL,
+    subjectID VARCHAR(10) NOT NULL,
+	PRIMARY KEY(ID),
+    FOREIGN KEY (subjectID) 
+        REFERENCES subject(ID)
+);
+
+
 -----------------------------------------------------------------------------------
 /* 6 */
-CREATE TABLE subject (
-    ID VARCHAR(10) NOT NULL PRIMARY KEY,
-    name NVARCHAR(100) NOT NULL,
-    num_credit SMALLINT NOT NULL
+CREATE TABLE textbook (
+    Isbn DECIMAL(13,0) NOT NULL,
+    title VARCHAR(255) NOT NULL,
+    field VARCHAR(255) NOT NULL,
+    PRIMARY KEY (Isbn)
 );
 -----------------------------------------------------------------------------------
 /* 7 */
-CREATE TABLE text_book (
-    ID VARCHAR(10) NOT NULL,
-    name VARCHAR(50) NOT NULL,
-    publishing_year VARCHAR(4) NOT NULL,
+CREATE TABLE publisher (
+    ID INT NOT NULL IDENTITY(1,1),
+    name NVARCHAR(255) NOT NULL,
+    PRIMARY KEY (ID)
+);
+/* 8 */
+CREATE TABLE author (
+    ID INT NOT NULL IDENTITY(1,1),
+    name NVARCHAR(255) NOT NULL,
     PRIMARY KEY (ID)
 );
 /*********************************/
@@ -83,96 +99,116 @@ CREATE TABLE text_book (
 /*        RELASHION SHIP         */
 /*                               */
 /*********************************/
-/* 8 */
-CREATE TABLE room (
-    name VARCHAR(50) NOT NULL PRIMARY KEY,
-	building NVARCHAR(100) NOT NULL,
-);
-----------------------------------------------------------------------------
 /* 9 */
-CREATE TABLE studentList (
-    pupil_ID VARCHAR(10) NOT NULL,
-	class_ID VARCHAR(10) NOT NULL ,
+CREATE TABLE Enrolls ( 
+    ID INT NOT NULL IDENTITY(1,1),
+    semester INT NOT NULL,
+    pupilID DECIMAL(7,0) NOT NULL,
+	subjectID VARCHAR(10) NOT NULL ,
+    PRIMARY KEY (ID),
+    FOREIGN KEY (pupilID) 
+        REFERENCES pupil(ID),
+    FOREIGN KEY (subjectID) 
+        REFERENCES subject(ID)
 );
-
+/* 9 */
+CREATE TABLE manageClass (
+    ID INT NOT NULL IDENTITY(1,1),
+    classID VARCHAR(10) NOT NULL ,
+    lecturerID DECIMAL(7,0) NOT NULL,
+    PRIMARY KEY (ID),
+    FOREIGN KEY (classID) 
+        REFERENCES class(ID),
+    FOREIGN KEY (lecturerID) 
+        REFERENCES lecturer(ID)
+);
+---------------------------------------------------------------------------
 /* 10 */
-CREATE TABLE lecturerList (
-    lecturer_ID VARCHAR(10) NOT NULL,
-	class_ID VARCHAR(10) NOT NULL ,
+CREATE TABLE attendsClass (
+    ID INT NOT NULL IDENTITY(1,1),
+    classID VARCHAR(10) NOT NULL ,
+    pupilID DECIMAL(7,0) NOT NULL,
+    PRIMARY KEY (ID),
+    FOREIGN KEY (pupilID) 
+        REFERENCES pupil(ID),
+    FOREIGN KEY (classID) 
+        REFERENCES class(ID),
 );
-
 ------------------------------------------------------------------------
 /* 11 */
-CREATE TABLE education (
-    falcuty_ID VARCHAR(10) NOT NULL,
-    subject_ID VARCHAR(10) NOT NULL,
+CREATE TABLE manageSubject (
+    ID INT NOT NULL IDENTITY(1,1),
+    semester INT NOT NULL,
+    subjectID VARCHAR(10) NOT NULL,
+    lecturerID DECIMAL(7,0) NOT NULL,
+    PRIMARY KEY (ID),
+    FOREIGN KEY (subjectID) 
+        REFERENCES subject(ID),
+    FOREIGN KEY (lecturerID) 
+        REFERENCES lecturer(ID),
 );
 ---------------------------------------------------------------------------
 /* 12 */
-CREATE TABLE subjectManage (
-    lecturer_ID VARCHAR(10) NOT NULL,
-    subject_ID VARCHAR(10) NOT NULL,
-    tex_book_ID VARCHAR(10) NOT NULL,
+CREATE TABLE assignsTextBook (
+    ID INT NOT NULL IDENTITY(1,1),
+    semester INT NOT NULL,
+    subjectID VARCHAR(10) NOT NULL,
+    textbookID DECIMAL(13,0) NOT NULL, 
+    PRIMARY KEY (ID),
+    FOREIGN KEY (subjectID) 
+        REFERENCES subject(ID),
+    FOREIGN KEY (textbookID) 
+        REFERENCES textbook(Isbn),
 );
-
 ------------------------------------------------------------------------------
 /* 13 */
-CREATE TABLE compilation (
-    tex_book_ID VARCHAR(10) NOT NULL,
-    author_ID VARCHAR(10) NOT NULL,
+CREATE TABLE teaches (
+    ID INT NOT NULL IDENTITY(1,1),
+    week INT NOT NULL,
+    classID VARCHAR(10) NOT NULL ,
+    lecturerID DECIMAL(7,0) NOT NULL,
+    PRIMARY KEY (ID),
+    FOREIGN KEY (classID) 
+        REFERENCES class(ID),
+    FOREIGN KEY (lecturerID) 
+        REFERENCES lecturer(ID),
 );
+------------------------------------------------------------------------------
 /* 14 */
-CREATE TABLE registerSubject(
-    pupil_ID VARCHAR(10) NOT NULL,
-    subject_ID VARCHAR(10) NOT NULL,
+CREATE TABLE useTextbook (
+    ID INT NOT NULL IDENTITY(1,1),
+    subjectID VARCHAR(10) NOT NULL,
+    textbookID DECIMAL(13,0) NOT NULL, 
+    PRIMARY KEY (ID),
+    FOREIGN KEY (subjectID) 
+        REFERENCES subject(ID),
+    FOREIGN KEY (textbookID) 
+        REFERENCES textbook(Isbn),
 );
+------------------------------------------------------------------------------
 /* 15 */
-CREATE TABLE creditPupil(
-    pupilID VARCHAR(10) NOT NULL,
-    numCredit SMALLINT NOT NULL,
-	totalCredit SMALLINT NOT NULL,
+CREATE TABLE publishes(
+    ID INT NOT NULL IDENTITY(1,1),
+    textbookID DECIMAL(13,0) NOT NULL, 
+    publisherID INT NOT NULL,
+    PublishedDate DATETIME ,
+    PRIMARY KEY (ID),
+    FOREIGN KEY (textbookID) 
+        REFERENCES textbook(Isbn),
+    FOREIGN KEY (publisherID) 
+        REFERENCES publisher(ID),
+
+);
+------------------------------------------------------------------------------
+/* 16 */
+CREATE TABLE writes(
+    ID INT NOT NULL IDENTITY(1,1),
+    textbookID DECIMAL(13,0) NOT NULL, 
+    authorID INT NOT NULL,
+    PRIMARY KEY (ID),
+    FOREIGN KEY (textbookID) 
+        REFERENCES textbook(Isbn),
+    FOREIGN KEY (authorID) 
+        REFERENCES author(ID),
 );
 
-
-/*********************************/
-/*                               */
-/*         FOREIGN KEY           */
-/*                               */
-/*********************************/
-
-ALTER TABLE lecturer ADD CONSTRAINT fk_lecturer_falcutyID FOREIGN KEY (falcuty_ID) REFERENCES falcuty(ID);
-
------------------------------------------------------------------------------------------------------------
-ALTER TABLE class ADD CONSTRAINT fk_class_subjectID FOREIGN KEY (subject_ID) REFERENCES subject(ID);
-ALTER TABLE class ADD CONSTRAINT fk_class_lectureID FOREIGN KEY (lecturer_ID) REFERENCES lecturer(ID);
-ALTER TABLE class ADD CONSTRAINT fk_class_room FOREIGN KEY (room) REFERENCES room(name);
-
-------------------------------------------------------------------------------------------------------------
-ALTER TABLE pupil ADD CONSTRAINT fk_pupil_falcutyID FOREIGN KEY (falcuty_ID) REFERENCES falcuty(ID);
-
---------------------------------------------------------------------
-ALTER TABLE studentList ADD CONSTRAINT fk_studentList_pupilID FOREIGN KEY (pupil_ID) REFERENCES pupil(ID);
-ALTER TABLE studentList ADD CONSTRAINT fk_studentList_classID FOREIGN KEY (class_ID) REFERENCES class(ID);
-
---------------------------------------------------------------------
-ALTER TABLE lecturerList ADD CONSTRAINT fk_lecturerList_lectureID FOREIGN KEY (lecturer_ID) REFERENCES lecturer(ID);
-ALTER TABLE lecturerList ADD CONSTRAINT fk_lecturerList_classID FOREIGN KEY (class_ID) REFERENCES class(ID);
-
---------------------------------------------------------------------
-ALTER TABLE education ADD CONSTRAINT fk_education_falcutyID FOREIGN KEY (falcuty_ID) REFERENCES falcuty(ID);
-ALTER TABLE education ADD CONSTRAINT fk_education_subjectID FOREIGN KEY (subject_ID) REFERENCES subject(ID);
-
---------------------------------------------------------------------
-ALTER TABLE subjectManage ADD CONSTRAINT fk_subjectManage_lectureID FOREIGN KEY (lecturer_ID) REFERENCES lecturer(ID);
-ALTER TABLE subjectManage ADD CONSTRAINT fk_subjectManage_subjectID FOREIGN KEY (subject_ID) REFERENCES subject(ID);
-ALTER TABLE subjectManage ADD CONSTRAINT fk_subjectManage_texbookID FOREIGN KEY (tex_book_ID) REFERENCES text_book(ID);
-
----------------------------------------------------------------------
-ALTER TABLE compilation ADD CONSTRAINT fk_compilation_texbookID FOREIGN KEY (tex_book_ID) REFERENCES text_book(ID);
-ALTER TABLE compilation ADD CONSTRAINT fk_compilation_authorID FOREIGN KEY (author_ID) REFERENCES author(ID);
-
----------------------------------------------------------------------
-ALTER TABLE registerSubject ADD CONSTRAINT fk_registerSubject_pupilID FOREIGN KEY (pupil_ID) REFERENCES pupil(ID);
-ALTER TABLE registerSubject ADD CONSTRAINT fk_registerSubject_subjectID FOREIGN KEY (subject_ID) REFERENCES subject(ID);
----------------------------------------------------------------------
-ALTER TABLE creditPupil ADD CONSTRAINT fk_creditPupil_pupilID FOREIGN KEY (pupilID) REFERENCES pupil(ID);

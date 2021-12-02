@@ -6,13 +6,6 @@
 /*********************************/
 
 
-create trigger createCredit on pupil AFTER INSERT
-AS
-begin
-	insert into creditPupil (pupilID,numCredit,totalCredit)
-	values ((SELECT inserted.ID FROM inserted),'','');
-end;
-go
 ---------------------------------------------------------------
 
 create trigger deletePupil on pupil  
