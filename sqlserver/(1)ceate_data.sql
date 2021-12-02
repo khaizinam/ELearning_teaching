@@ -54,7 +54,6 @@ CREATE TABLE subject (
     ID VARCHAR(10) NOT NULL,
     name NVARCHAR(255) NOT NULL,
     credits INT NOT NULL CHECK (Credits > 0 AND Credits < 6),
-    DepartmentID INT NOT NULL,
 	PRIMARY KEY(ID),
     FOREIGN KEY (DepartmentID) 
         REFERENCES Department(ID)
