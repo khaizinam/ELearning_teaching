@@ -402,13 +402,14 @@ SELECT manageSubject.ID , manageSubject.semester,lecturer.full_name as lecturerN
 		FROM ((manageSubject 
 		INNER JOIN lecturer ON manageSubject.lecturerID = lecturer.ID)
 		INNER JOIN subject ON manageSubject.subjectID = subject.ID);
+
 SELECT  teaches.ID ,teaches.week , lecturer.full_name as lecturerName , lecturer.ID as lecturerID,class.name as className
 		FROM ((teaches 
 		INNER JOIN lecturer ON teaches.lecturerID = lecturer.ID)
 		INNER JOIN class ON teaches.classID = class.ID);
 
 
-CREATE FUNCTION studentList(@classID VARCHAR(10))
+CREATE FUNCTION studentList(@classID VARCHAR(10)
 RETURNS TABLE
 RETURN
 (
