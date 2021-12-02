@@ -137,9 +137,8 @@ CREATE TABLE attendsClass (
 /* 11 */
 CREATE TABLE manageSubject (
     ID INT NOT NULL IDENTITY(1,1),
-    semester INT NOT NULL,
     subjectID VARCHAR(10) NOT NULL,
-    lecturerID DECIMAL(7,0) NOT NULL,
+    Department INT NOT NULL,
     PRIMARY KEY (ID),
     FOREIGN KEY (subjectID) 
         REFERENCES subject(ID),
@@ -151,7 +150,7 @@ CREATE TABLE manageSubject (
 CREATE TABLE assignsTextBook (
     ID INT NOT NULL IDENTITY(1,1),
     semester INT NOT NULL,
-    subjectID VARCHAR(10) NOT NULL,
+    subjectID INT NOT NULL,
     textbookID DECIMAL(13,0) NOT NULL, 
     PRIMARY KEY (ID),
     FOREIGN KEY (subjectID) 
@@ -163,6 +162,7 @@ CREATE TABLE assignsTextBook (
 /* 13 */
 CREATE TABLE teaches (
     ID INT NOT NULL IDENTITY(1,1),
+    semester INT NOT NULL,
     week INT NOT NULL,
     classID VARCHAR(10) NOT NULL ,
     lecturerID DECIMAL(7,0) NOT NULL,
@@ -399,10 +399,6 @@ RETURN
 )
 GO
 
-SELECT class.ID ,class.name,lecturer.full_name as LecturerName , lecturer.ID as LecturerID
-		FROM ((manageClass 
-		INNER JOIN lecturer ON manageClass.lecturerID = lecturer.ID)
-		INNER JOIN class ON class.ID = manageClass.classID);
 
 SELECT Enrolls.ID ,Enrolls.semester,pupil.full_name as StudentName,pupil.ID as MSSV , subject.name as courseName , subject.ID as courseID
 		FROM ((Enrolls 
@@ -414,9 +410,9 @@ SELECT manageClass.ID , class.name as className , lecturer.full_name as lecturer
 		INNER JOIN class ON manageClass.classID = class.ID)
 		INNER JOIN lecturer ON manageClass.lecturerID = lecturer.ID);
 
-SELECT manageSubject.ID , manageSubject.semester,lecturer.full_name as lecturerName , lecturer.ID as lecturerID,subject.name as subjecName, subject.ID as courseID
+SELECT manageSubject.ID , manageSubject.semester,Department.name as DepartmentName,subject.name as subjecName, subject.ID as courseID
 		FROM ((manageSubject 
-		INNER JOIN lecturer ON manageSubject.lecturerID = lecturer.ID)
+		INNER JOIN Department ON manageSubject.DepartmentID = lecturer.ID)
 		INNER JOIN subject ON manageSubject.subjectID = subject.ID);
 
 SELECT  teaches.ID ,teaches.week , lecturer.full_name as lecturerName , lecturer.ID as lecturerID,class.name as className
