@@ -383,6 +383,23 @@ values
 /*            QUERY              */
 /*                               */
 /*********************************/
+
+CREATE FUNCTION studentList(@classID VARCHAR(10)
+RETURNS TABLE
+RETURN
+(
+		SELECT class.name,pupil.full_name as studentName,pupil.ID as MSSV, Department.name as Department
+		FROM (((attendsClass 
+		INNER JOIN class
+		ON attendsClass.classID = class.ID)
+		INNER JOIN pupil
+		ON attendsClass.pupilID = pupil.ID)
+		INNER JOIN Department
+		ON pupil.DepartmentID = Department.ID)
+		WHERE classID = @classID
+)
+GO
+
 SELECT class.ID ,class.name,lecturer.full_name as LecturerName , lecturer.ID as LecturerID
 		FROM ((manageClass 
 		INNER JOIN lecturer ON manageClass.lecturerID = lecturer.ID)
@@ -408,21 +425,5 @@ SELECT  teaches.ID ,teaches.week , lecturer.full_name as lecturerName , lecturer
 		INNER JOIN lecturer ON teaches.lecturerID = lecturer.ID)
 		INNER JOIN class ON teaches.classID = class.ID);
 
-
-CREATE FUNCTION studentList(@classID VARCHAR(10)
-RETURNS TABLE
-RETURN
-(
-		SELECT class.name,pupil.full_name as studentName,pupil.ID as MSSV, Department.name as Department
-		FROM (((attendsClass 
-		INNER JOIN class
-		ON attendsClass.classID = class.ID)
-		INNER JOIN pupil
-		ON attendsClass.pupilID = pupil.ID)
-		INNER JOIN Department
-		ON pupil.DepartmentID = Department.ID)
-		WHERE classID = @classID
-)
-GO
 
 
