@@ -1,0 +1,25 @@
+#Home::before{
+    font-family: "Font Awesome 5 free";
+    font-weight: 900;
+    color: #43433e;
+    font-size: 30px;
+    content: "\f015";
+}
+.color-white{
+    color : white;
+}
+.justify-content-between {
+    justify-content: space-between;
+}
+.justify-content-end {
+    justify-content: flex-end;
+}
+.justify-content-start {
+    justify-content: flex-start;
+}
+.d-flex {
+    display : flex;
+}
+.font-bold{
+    font-weight: bold;
+}

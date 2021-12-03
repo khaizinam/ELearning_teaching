@@ -4,7 +4,7 @@
               public $host='localhost';
               public $name='root';
               public $pass='';
-              public $database='elearning';
+              public $database='elearning_v2';
       
               public $link;
               public $eror;
@@ -19,287 +19,162 @@
                           return false;
                       }
               }
-              public function select($query){
-                 $result = $this->link->query($query) or 
-                 die($this->link->error.__LINE__);
+              public function send($query){
+                 $result = $this->link->query($query);
                 return $result;
               }
-              public function insert($query){
-                  $insert_row = $this->link->query($query) or 
-                  die($this->link->error.__LINE__);
-                      return $insert_row;
-               }
-               public function update($query){
-                  $update_row = $this->link->query($query) or 
-                  die($this->link->error.__LINE__);
-               }
-               public function delete($query){
-                  $delete_row = $this->link->query($query) or 
-                  die($this->link->error.__LINE__);
-               }
         }  
-
-
-
-          // NHOM LOP
-          class Nhom_lop{
-               public $db;
+        class Department {
+                public $db;
        
                public function __construct()
                {
                    $this->db = new DataBase();
                }
                public function select(){
-                   $query = "SELECT * FROM nhom_lop";
-                   $result=$this->db->select($query);
+                   $query = "SELECT * FROM department";
+                   $result=$this->db->send($query);
                    return $result;
                } 
-               public function select_id($id){
-                   $query = "SELECT * FROM nhom_lop WHERE ID='".$id."'";
-                   $result=$this->db->select($query);
+                public function insert($name){
+                    $query = "INSERT INTO department(name) VALUES ('".$name."')";
+                    $result=$this->db->send($query);
+                    if($result == true){
+                        $mes = 'Insert success new Department';
+                    
+                    }else {
+                        $mes = 'Insert fail new Department';
+                    }
+                    return $mes;
+                } 
+                public function update($name,$id){
+                    $query = "UPDATE department SET name = '".$name."' WHERE ID = '".$id."'";
+                    $result=$this->db->send($query);
+                    if($result == true){
+                        $mes = 'Update success Department';
+                    
+                    }else {
+                        $mes = 'Update fail Department';
+                    }
+                    return $mes;
+                } 
+        }
+        
+        class Lecturer {
+            public $db;
+       
+               public function __construct()
+               {
+                   $this->db = new DataBase();
+               }
+               public function select(){
+                   $query = "SELECT lecturer.f_name as lecturerfName,lecturer.l_name as lecturerlName, lecturer.ID as lecturerID, department.name as DepartmentName , department.ID as DepartmentID  
+                   FROM lecturer
+                   INNER JOIN department ON lecturer.departmentID = department.ID ORDER BY lecturer.l_name ASC";
+                   $result=$this->db->send($query);
                    return $result;
-               }
-               public function select_id_MH($id){
-                   $query = "SELECT * FROM nhom_lop WHERE id_monhoc='".$id."'";
-                   $result=$this->db->select($query);
-                   return $result;
-               }
-               public function insert(){
-                   $id=$_POST['id'];
-                   $ten=$_POST['ten'];
-                   $start=$_POST['start'];
-                   $end=$_POST['end'];
-                   $room=$_POST['Phong_hoc'];
-                   $id_giang_vien=$_POST['id_giang_vien'];
-                   $id_subject=$_POST['id_mon_hoc'];
-                   $query = "INSERT INTO nhom_lop VALUES ('".$id."','".$ten."','".$start."','".$end."','".$room."','".$id_giang_vien."','".$id_subject."')";
-                   $this->db->select($query);
-               }
-               public function delete(){
-                   $id =  $_GET['id_get'];
-                   $query = "DELETE FROM nhom_lop WHERE ID='".$id."'";
-                   $this->db->select($query);
-               }
-               public function update(){
-                   $id_get= $_SESSION['id'];
-                   $ten=$_POST['ten'];
-                   $start=$_POST['start'];
-                   $end=$_POST['end'];
-                   $room=$_POST['Phong_hoc'];
-                   $id_giang_vien=$_POST['id_giang_vien'];
-                   $id_subject=$_POST['id_monhoc'];
-                   $query = "UPDATE nhom_lop SET ten='".$ten."', tiet_bat_dau='".$start."', tiet_ket_thuc='".$end."', Phong_hoc='".$room."',id_giang_vien='".$id_giang_vien."', id_monhoc='".$id_subject."' WHERE ID='".$id_get."'";
-                   $this->db->select($query);
-               }
-           };
-           class Mon_Hoc{
-            public $db;
-            public function __construct()
-            {
-                $this->db = new DataBase();
-            }
-            public function select(){
-                $sql = "SELECT * FROM mon_hoc";
-                $result=$this->db->select($sql);
-                return $result;
-            }
+               } 
             public function select_id($id){
-                $sql = "SELECT * FROM mon_hoc WHERE ID='".$id."'";
-                $result=$this->db->select($sql);
-                return $result;
-            }
-            public function insert(){
-                $id=$_POST['ID'];
-                $name_MH=$_POST['Ten_MH'];
-                $STC_MH=$_POST['So_TC'];
-                $sql = "INSERT INTO mon_hoc VALUES ('".$id."','".$name_MH."','".$STC_MH."')";
-                $this->db->select($sql);
-            }
-            public function delete(){
-                $id =  $_GET['id_get'];
-                $sql = "DELETE FROM mon_hoc WHERE ID='".$id."'";
-                $this->db->select($sql);
-            }
-            public function update(){
-                $id= $_SESSION['id'];
-                $name=$_POST['Ten_MH'];
-                $so_tc=$_POST['So_TC'];
-                $sql = "UPDATE mon_hoc SET Ten_MH='".$name."', So_TC='".$so_tc."' WHERE ID='".$id."'";
-                $this->db->select($sql);
-
-            }
-        }
-    
-    
-    
-        //==================================== SINH VIEN =================================== 
-    
-    
-    
-        class Sinh_Vien{
-            public $db;
-            public function __construct()
-            {
-                $this->db = new DataBase();
-            }
-            public function select(){
-                $sql = "SELECT * FROM Sinh_Vien";
-                $result=$this->db->select($sql);
-                return $result;
-            }
-            public function select_id($id){
-                $sql = "SELECT * FROM Sinh_Vien WHERE ID='".$id."'";
-                $result=$this->db->select($sql);
-                return $result;
-            }
-            public function insert(){
-                $ID=$_POST['ID'];
-                $name=$_POST['Ho_ten'];
-                $lop=$_POST['Lop'];
-                $email=$_POST['Email'];
-                $TT_hoc=$_POST['TT_hoc'];
-                $khoa_id=$_POST['khoa_ID'];
-                $sql = "INSERT INTO Sinh_Vien VALUES ('".$ID."','".$name."','".$lop."','".$email."','".$TT_hoc."','".$khoa_id."')";
-                $this->db->select($sql);
-            }
-            public function delete(){
-                $id =  $_GET['id_get'];
-                $sql = "DELETE FROM Sinh_Vien WHERE ID='".$id."'";
-                $this->db->select($sql);
-
-            }
-            public function update(){
-                $ID=$_SESSION['id'];
-                $name=$_POST['Ho_ten'];
-                $lop=$_POST['Lop'];
-                $email=$_POST['Email'];
-                $TT_hoc=$_POST['TT_hoc'];
-                $khoa_id=$_POST['khoa_ID'];
-                $sql = "UPDATE Sinh_Vien SET Ho_ten='".$name."',Lop='".$lop."',Email='".$email."',TT_hoc='".$TT_hoc."',khoa_ID='".$khoa_id."' WHERE ID='".$ID."' ";
-                $this->db->select($sql);
-
-            }
-        }
-        //==================================== KHOA =================================== 
-    
-    
-    
-        class khoa{
-            public $db;
-            public function __construct()
-            {
-                $this->db = new DataBase();
-            }
-            public function select(){
-                $sql = "SELECT * FROM khoa";
-                $result=$this->db->select($sql);
-                return $result;
-            }
-            public function select_id($id){
-                $sql = "SELECT * FROM khoa WHERE ID='".$id."'";
-                $result=$this->db->select($sql);
-                return $result;
-            }
-            public function insert(){
-                $ID=$_POST['ID'];
-                $name=$_POST['name'];
-                $sql = "INSERT INTO khoa VALUES ('".$ID."','".$name."')";
-                $this->db->select($sql);
-            }
-            public function delete(){
-                $id =  $_GET['id_get'];
-                $sql = "DELETE FROM khoa WHERE ID='".$id."'";
-                $this->db->select($sql);
-            }
-            public function update(){
-                $id =  $_SESSION['id'];
-                $name =  $_POST['name'];
-                $sql = "UPDATE khoa  SET name='".$name."' WHERE ID='".$id."'";
-                $this->db->select($sql);
-
-            }
-        }
-        //================================GIANG VIEN================================
-        class Giang_Vien{
-            public $db;
-    
-            public function __construct()
-            {
-                $this->db = new DataBase();
-            }
-            public function select(){
-                $sql = "SELECT * FROM Giang_Vien";
-                $result=$this->db->select($sql);
-                return $result;
+                    $query = "SELECT lecturer.f_name as lecturerfName,lecturer.l_name as lecturerlName, lecturer.ID as lecturerID, department.name as DepartmentName , department.ID as DepartmentID  
+                    FROM lecturer
+                    INNER JOIN department ON lecturer.departmentID = department.ID
+                    WHERE lecturer.ID = '".$id."'";
+                    $result=$this->db->send($query);
+                    return $result;
             } 
-            public function select_id($id){
-                $sql = "SELECT * FROM Giang_Vien WHERE ID='".$id."'";
-                $result=$this->db->select($sql);
-                return $result;
-            }
-            public function insert(){
-                $id=$_POST['ID'];
-                $name=$_POST['Ho_ten'];
-                $email=$_POST['Email'];
-                $sdt=$_POST['SDT'];
-                $id_khoa=$_POST['ID_Khoa'];
-                $sql = "INSERT INTO Giang_Vien VALUES ('".$id."','".$name."','".$email."','".$sdt."','".$id_khoa."')";
-                $this->db->select($sql);
-            }
-            public function delete(){
-                $id =  $_GET['id_get'];
-                $sql = "DELETE FROM Giang_Vien WHERE ID='".$id."'";
-                $this->db->select($sql);
-            }
-            public function update(){
-                $id_get= $_SESSION['id'];
-                $name=$_POST['Ho_ten'];
-                $email=$_POST['Email'];
-                $sdt=$_POST['SDT'];
-                $id_khoa=$_POST['ID_Khoa'];
-                $sql = "UPDATE Giang_Vien SET  Ho_ten='".$name."', Email='".$email."', SDT='".$sdt."',ID_Khoa='".$id_khoa."' WHERE ID='".$id_get."'";
-                $this->db->select($sql);
-            }
-        };
-        //==================================== Phong hoc=================================== 
-    
-    
-    
-        class phong_hoc{
+            public function insert($id,$fname,$lname,$departmentid){
+                $query = "INSERT INTO lecturer(ID, f_name, l_name, DepartmentID) VALUES ('".$id."', '".$fname."','".$lname."', '".$departmentid."')";
+                $result=$this->db->send($query);
+                if($result == true){
+                    $mes = 'Insert success new Lecturer';
+                
+                }else {
+                    $mes = 'Insert fail new Lecturer';
+                }
+                return $mes;
+            } 
+            public function update($id,$fname,$lname,$departmentid){
+                $query = "UPDATE lecturer SET f_name = '".$fname."',l_name = '".$lname."',DepartmentID = '".$departmentid."' WHERE ID = '".$id."'";
+                $result=$this->db->send($query);
+                if($result == true){
+                    $mes = 'Update success Lecturer';
+                
+                }else {
+                    $mes = 'Update fail Lecturer';
+                }
+                return $mes;
+            } 
+        }
+        class Student{
             public $db;
-            public function __construct()
-            {
-                $this->db = new DataBase();
-            }
-            public function select(){
-                $sql = "SELECT * FROM phong_hoc";
-                $result=$this->db->select($sql);
-                return $result;
-            }
-            public function select_name($name){
-                $sql = "SELECT * FROM phong_hoc WHERE name='".$name."'";
-                $result=$this->db->select($sql);
-                return $result;
-            }
-            public function insert(){
-                $name=$_POST['name'];
-                $toa=$_POST['toa'];
-                $co_so=$_POST['co_so'];
-                $sql = "INSERT INTO phong_hoc VALUES ('".$name."','".$toa."','".$co_so."')";
-                $this->db->select($sql);
-            }
-            public function delete(){
-                $name =  $_GET['name'];
-                $sql = "DELETE FROM phong_hoc WHERE name='".$name."'";
-                $this->db->select($sql);
-
-            }
-            public function update(){
-                $name =  $_SESSION['name'];
-                $toa =  $_POST['toa'];
-                $co_so =  $_POST['co_so'];
-                $sql = "UPDATE phong_hoc  SET toa='".$toa."', co_so='".$co_so."' WHERE name='".$name."'";
-                $this->db->select($sql);
+       
+               public function __construct()
+               {
+                   $this->db = new DataBase();
+               }
+               public function select(){
+                   $query = "SELECT pupil.f_name as studentfName,pupil.l_name as studentlName, pupil.ID as studentID, pupil.status as status, department.name as DepartmentName , department.ID as DepartmentID  
+                   FROM pupil
+                   INNER JOIN department ON pupil.departmentID = department.ID ORDER BY pupil.l_name ASC";
+                   $result=$this->db->send($query);
+                   return $result;
+               } 
+               public function insert($id,$fname,$lname,$departmentid,$status){
+                    $query = "INSERT INTO pupil(ID, f_name, l_name,status, DepartmentID) VALUES ('".$id."', '".$fname."','".$lname."', '".$status."', '".$departmentid."')";
+                    $result=$this->db->send($query);
+                    if($result == true){
+                        $mes = 'Insert success new Student';
+                    
+                    }else {
+                        $mes = 'Insert fail new Student';
+                    }
+                    return $mes;
+                }
+                public function select_id($id){
+                    $query = "SELECT pupil.f_name as studentfName,pupil.l_name as studentlName, pupil.ID as studentID, pupil.status as status, department.name as DepartmentName , department.ID as DepartmentID  
+                    FROM pupil
+                    INNER JOIN department ON pupil.departmentID = department.ID WHERE pupil.ID = '".$id."'";
+                    $result=$this->db->send($query);
+                    return $result;
+                } 
+                public function update($id,$fname,$lname,$departmentid,$status){
+                    $query = "UPDATE pupil SET f_name = '".$fname."',l_name = '".$lname."',DepartmentID = '".$departmentid."',status = '".$status."' WHERE ID = '".$id."'";
+                    $result=$this->db->send($query);
+                    if($result == true){
+                        $mes = 'Update success student';
+                    
+                    }else {
+                        $mes = 'Update fail student';
+                    }
+                    return $mes;
+                }   
+        }
+        class Subject{
+            public $db;
+       
+               public function __construct()
+               {
+                   $this->db = new DataBase();
+               }
+               public function select(){
+                   $query = "SELECT * FROM subject";
+                   $result=$this->db->send($query);
+                   return $result;
+               } 
+            public function insert($id,$name,$credits){
+                $query = "INSERT INTO subject(ID,name,credits) VALUES ('".$id."', '".$name."','".$credits."')";
+                $result=$this->db->send($query);
+                if($result == true){
+                    $mes = 'Insert success new Subject';
+                
+                }else {
+                    $mes = 'Insert fail new Subject';
+                }
+                return $mes;
             }
         }
+
+
+
+       
 ?>
