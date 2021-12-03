@@ -4,7 +4,7 @@
               public $host='localhost';
               public $name='root';
               public $pass='';
-              public $database='database';
+              public $database='elearning';
       
               public $link;
               public $eror;
