@@ -27,7 +27,11 @@
                header('location:manager.php');
           }   
      }
-
+     if(isset($_GET['lecturer-delete'])=='delete'){
+          $id_get = $_GET['lecturer-id'];
+          $_SESSION['message'] = $lecturer->delete($id_get);
+          header('location:manager.php');
+     }
      if(isset($_GET['lecturer-action']))
      {
           $action = $_GET['lecturer-action'];
@@ -118,9 +122,9 @@
           <form action="manager.php" method="post">
                <input type="hidden" name="lecturer-id" value="<?php echo $row_4['lecturerID']?>">
                <label for="lecturer-fisrt-name">Lecturer Firt Name</label><br>
-               <input class="input-1" type="text" name="lecturer-fisrt-name" placeholder="please type Lecturer Name"><br>
+               <input class="input-1" type="text" name="lecturer-fisrt-name" value="<?php echo $row_4['lecturerfName'] ?>" placeholder="<?php echo $row_4['lecturerfName'] ?>"><br>
                <label for="lecturer-last-name">Lecturer Last Name</label><br>
-               <input class="input-1" type="text" name="lecturer-last-name" placeholder="please type Lecturer Name"><br>
+               <input class="input-1" type="text" name="lecturer-last-name" value="<?php echo $row_4['lecturerlName'] ?>" placeholder="<?php echo $row_4['lecturerlName'] ?>"><br>
                <label for="lecturer-name">Department</label><br>
                <select name="department-id">
                     <option value="none">not choose</option>
@@ -134,7 +138,7 @@
                </select><br>
                <input class="btn-submit" type="submit" name="lecturer-update" value="Update">
           </form>
-          <button onclick="location.href='manager.php?lecturer-action=delete&lecturer-id=<?php echo $lecturerID?>'">Delete this Department</button>
+          <button onclick="location.href='manager.php?lecturer-delete=delete&lecturer-id=<?php echo $lecturerID?>'">Delete this Department</button>
      <?php
      }
      ?>

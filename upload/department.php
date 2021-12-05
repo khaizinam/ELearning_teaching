@@ -87,7 +87,6 @@
                <input class="input-1" type="text" name="department-name" placeholder="please type Department Name"><br>
                <input class="btn-submit" type="submit" name="Department-update" value="Update">
           </form>
-          <button onclick="location.href='manager.php?department-action=delete&department-id=<?php echo $departmentID?>'">Delete this Department</button>
      <?php
      }
      ?>

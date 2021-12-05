@@ -29,6 +29,7 @@
                     $lecturer = new Lecturer();
                     $student = new Student();
                     $subject = new Subject();
+                    $textbook = new Textbook();
                      session_start();
                      if(!isset( $_SESSION['page'])){
                         $_SESSION['page'] ='menu';
@@ -48,7 +49,7 @@
                      elseif($_SESSION['page'] == 'subject'){
                          include('../upload/subject.php');
                      }elseif($_SESSION['page'] == 'Textbook'){
-                         include('../upload/department.php');
+                         include('../upload/textbook.php');
                      }else{
 
                      }  

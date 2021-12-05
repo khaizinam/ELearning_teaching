@@ -14,6 +14,7 @@
         <div class="text-align-center cnt-mid">
             <a class="btn-1" href="user/student.php">Student</a>
             <a class="btn-1" href="user/manager.php">Manager</a>
+            <a class="btn-1" href="user/manager.php">Lecturer</a>
         </div>
     </div>    
 </body>

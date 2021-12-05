@@ -104,6 +104,17 @@
                 }
                 return $mes;
             } 
+            public function delete($id){
+                $query = "DELETE FROM lecturer WHERE ID = '".$id."'";
+                $result=$this->db->send($query);
+                if($result == true){
+                    $mes = 'Delete success Lecturer';
+                
+                }else {
+                    $mes = 'Delete fail Lecturer';
+                }
+                return $mes;
+            } 
         }
         class Student{
             public $db;
@@ -172,8 +183,54 @@
                 }
                 return $mes;
             }
+            public function select_class($subjectID){
+                $query = "SELECT * FROM class WHERE subjectID = '".$subjectID."'";
+                $result=$this->db->send($query);
+                return $result;
+            }
+            public function select_id($subjectID){
+                $query = "SELECT * FROM subject WHERE ID = '".$subjectID."'";
+                $result=$this->db->send($query);
+                return $result;
+            }
+            public function add_class($id ,$semester, $name, $maximum, $subjectID){
+                $query = "INSERT INTO class(ID,semester, name, maximum ,subjectID) VALUES ('".$id."', '".$semester."', '".$name."','".$maximum."', '".$subjectID."')";
+                $result=$this->db->send($query);
+                if($result == true){
+                    $mes = 'Insert success new Class';
+                
+                }else {
+                    $mes = 'Insert fail new Class';
+                }
+                return $mes;
+            }
+            public function delete_sbj($id){
+                $query = "DELETE FROM class WHERE subjectID = '".$id."'";
+                $this->db->send($query);
+                $query_2 = "DELETE FROM subject WHERE ID = '".$id."'";
+                $result=$this->db->send($query_2);
+                if($result == true){
+                    $mes = 'Delete success new Subject';
+                
+                }else {
+                    $mes = 'Delete fail new Subject';
+                }
+                return $mes;
+            }
         }
-
+        class Textbook{
+            public $db;
+       
+               public function __construct()
+               {
+                   $this->db = new DataBase();
+               }
+               public function select(){
+                   $query = "SELECT * FROM textbook";
+                   $result=$this->db->send($query);
+                   return $result;
+               } 
+            }
 
 
        

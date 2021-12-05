@@ -154,28 +154,15 @@
                          <td>3</td>
                    </tr>
               </table>
-         </div>
-
-
-
-
-
-
-
-
-
-
-
-
-
+          </div>
 
          <h2> UPDATE Student</h2>
          <form action="manager.php" method="post">
               <input type="hidden" name="student-id" value="<?php echo $row_std_4['studentID']?>">
               <label for="student-fisrt-name">Lecturer Firt Name</label><br>
-              <input class="input-1" type="text" name="student-fisrt-name" placeholder="please type student Name"><br>
+              <input class="input-1" type="text" name="student-fisrt-name" value="<?php  echo  $row_std_4['studentfName']?>" placeholder="<?php  echo  $row_std_4['studentfName']?>"><br>
               <label for="student-last-name">student Last Name</label><br>
-              <input class="input-1" type="text" name="student-last-name" placeholder="please type student Name"><br>
+              <input class="input-1" type="text" name="student-last-name" value="<?php  echo  $row_std_4['studentlName']?>" placeholder="<?php  echo  $row_std_4['studentlName']?>"><br>
               <label for="department-id">Department Choose</label><br>
               <select name="department-id">
                    <option value="none">not choose</option>
